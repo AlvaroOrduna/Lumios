@@ -25,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".ui.DrawerActivity"
+            android:theme="@style/AppTheme.WithDrawer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

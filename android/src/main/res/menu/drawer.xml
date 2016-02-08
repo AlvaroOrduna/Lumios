@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 Álvaro Orduna León
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -15,16 +15,15 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@android:color/transparent</item>
-    </style>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_main_item"
+            android:title="@string/drawer_item_main" />
+        <item
+            android:id="@+id/drawer_dummy_item"
+            android:title="@string/drawer_item_dummy" />
+    </group>
 
-    <style name="AppTheme.WithDrawer" />
-
-</resources>
+</menu>

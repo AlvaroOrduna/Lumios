@@ -19,4 +19,10 @@
 
     <string name="app_name">Lumios</string>
 
+    <!-- Navigation Drawer -->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_item_main">Main</string>
+    <string name="drawer_item_dummy">Dummy</string>
+
 </resources>
