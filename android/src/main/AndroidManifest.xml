@@ -87,6 +87,11 @@
             android:name=".service.LumiosRegistrationIntentService"
             android:exported="false"/>
 
+        <!-- LumiosDownloadService: download data -->
+        <service
+            android:name=".service.LumiosDownloadService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

@@ -17,20 +17,18 @@
 
 package io.ordunaleon.lumios.service;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
 import io.ordunaleon.lumios.utils.LogUtils;
 
-import static io.ordunaleon.lumios.utils.LogUtils.LOGV;
+import static io.ordunaleon.lumios.utils.LogUtils.LOGD;
 
 public class LumiosGcmListenerService extends GcmListenerService {
 
     private final String LOG_TAG = LogUtils.makeLogTag(this.getClass());
-
-    private final static String BUNDLE_URL_KEY = "url";
-    private final static String BUNDLE_SEND_TIME_KEY = "currentDate";
 
     /**
      * Called when message is received.
@@ -41,9 +39,12 @@ public class LumiosGcmListenerService extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String url = data.getString(BUNDLE_URL_KEY);
-        String sendTime = data.getString(BUNDLE_SEND_TIME_KEY);
+        LOGD(LOG_TAG, "onMessageReceived from: " + from);
 
-        LOGV(LOG_TAG, "Message received sent at " + sendTime + " from " + from + ": " + url);
+        if (from.equals("/topics/pvpc")) {
+            Intent intent = new Intent(this, LumiosDownloadService.class);
+            intent.putExtras(data);
+            startService(intent);
+        }
     }
 }
