@@ -38,6 +38,11 @@ public class PrefUtils {
     public static final int PREF_FARE_DEFAULT = R.string.pref_fare_default_value;
 
     /**
+     * Boolean indicating whether the app has been registered with GCM.
+     */
+    public static final int PREF_SENT_TOKEN_KEY = R.string.pref_sent_token_key;
+
+    /**
      * Return true if the first app run have already been executed.
      *
      * @param context Context to be used to lookup the {@link SharedPreferences}.
@@ -79,6 +84,28 @@ public class PrefUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().putString(context.getResources().getString(PREF_FARE_KEY),
                 String.valueOf(value)).apply();
+    }
+
+    /**
+     * Store a boolean indicating whether the app has been registered with GCM.
+     *
+     * @param context The context of the preferences where values are stored.
+     * @param value   The value to store.
+     */
+    public static void setSentToken(Context context, boolean value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putBoolean(context.getResources().getString(PREF_SENT_TOKEN_KEY), value).apply();
+    }
+
+    /**
+     * Get the boolean indicating whether the app has been registered with GCM.
+     *
+     * @param context The context of the preferences where values are stored.
+     * @return Boolean The value stored.
+     */
+    public static boolean getSentToken(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getResources().getString(PREF_SENT_TOKEN_KEY), false);
     }
 
     /**

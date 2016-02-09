@@ -18,6 +18,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.ordunaleon.lumios">
 
+    <permission
+        android:name="io.ordunaleon.lumios.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="io.ordunaleon.lumios.permission.C2D_MESSAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -43,6 +50,42 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.DrawerActivity"/>
         </activity>
+
+        <!-- GcmReceiver: handles messages sent from Lumios web server. -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="io.ordunaleon.lumios.gcm"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- GcmListenerService: enables various aspects of handling messages. -->
+        <service
+            android:name=".service.LumiosGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+
+        <!-- InstanceIDListenerService: handle the creation, rotation, and updating of registration tokens. -->
+        <service
+            android:name=".service.LumiosInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <!-- LumiosRegistrationIntentService: register the device -->
+        <service
+            android:name=".service.LumiosRegistrationIntentService"
+            android:exported="false"/>
 
     </application>
 

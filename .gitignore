@@ -76,3 +76,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+## Google Services
+google-services.json
+

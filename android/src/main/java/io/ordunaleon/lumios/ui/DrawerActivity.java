@@ -17,7 +17,10 @@
 
 package io.ordunaleon.lumios.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,13 +40,24 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import io.ordunaleon.lumios.R;
+import io.ordunaleon.lumios.service.LumiosRegistrationIntentService;
+import io.ordunaleon.lumios.utils.LogUtils;
 import io.ordunaleon.lumios.utils.PrefUtils;
+
+import static io.ordunaleon.lumios.utils.LogUtils.LOGI;
 
 
 public class DrawerActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private final String LOG_TAG = LogUtils.makeLogTag(this.getClass());
+
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private static final String KEY_STATE_TITLE = "state_title";
 
@@ -55,6 +70,8 @@ public class DrawerActivity extends AppCompatActivity implements
 
     private TextView mDrawerHeaderHead;
     private TextView mDrawerHeaderSubhead;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +110,19 @@ public class DrawerActivity extends AppCompatActivity implements
         mDrawerHeaderHead = (TextView) headerTitle.findViewById(R.id.drawer_header_head);
         mDrawerHeaderSubhead = (TextView) headerTitle.findViewById(R.id.drawer_header_subhead);
 
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                View view = findViewById(R.id.frame_layout);
+
+                if (PrefUtils.getSentToken(context)) {
+                    Snackbar.make(view, getString(R.string.gcm_send_ok), Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, getString(R.string.gcm_send_error), Snackbar.LENGTH_LONG).show();
+                }
+            }
+        };
+
         // First run of the app starts with the Navigation Drawer open.
         if (!PrefUtils.isWelcomeDone(this)) {
             PrefUtils.setWelcomeDone(this, true);
@@ -103,6 +133,13 @@ public class DrawerActivity extends AppCompatActivity implements
             onNavigationItemSelected(navigationView.getMenu().findItem(DEFAULT_DRAWER_ITEM_ID));
         } else {
             setTitle(savedInstanceState.getCharSequence(KEY_STATE_TITLE));
+        }
+
+        // Check for Google Play Services and start LumiosRegistrationIntentService to register this
+        // application with GCM.
+        if (checkPlayServices()) {
+            Intent intent = new Intent(this, LumiosRegistrationIntentService.class);
+            startService(intent);
         }
     }
 
@@ -124,12 +161,17 @@ public class DrawerActivity extends AppCompatActivity implements
         // change the fare preference in Settings activity, we do not notice it so, in any case,
         // we update the drawer header, just in case.
         updateDrawerHeader();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(LumiosRegistrationIntentService.REGISTRATION_COMPLETE));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         PrefUtils.unregisterOnSharedPreferenceChangeListener(this, this);
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
     }
 
     @Override
@@ -198,5 +240,26 @@ public class DrawerActivity extends AppCompatActivity implements
         String[] faresEntries = getResources().getStringArray(R.array.fare_entries);
 
         mDrawerHeaderSubhead.setText(faresEntries[selectedFareIndex]);
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                LOGI(LOG_TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
