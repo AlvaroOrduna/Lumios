@@ -22,6 +22,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
+import io.ordunaleon.lumios.R;
+
 public class PrefUtils {
 
     /**
@@ -32,7 +34,8 @@ public class PrefUtils {
     /**
      * Integer indicating which of the three available fares is selected.
      */
-    public static final String PREF_FARE_KEY = "pref_fare";
+    public static final int PREF_FARE_KEY = R.string.pref_fare_key;
+    public static final int PREF_FARE_DEFAULT = R.string.pref_fare_default_value;
 
     /**
      * Return true if the first app run have already been executed.
@@ -62,7 +65,9 @@ public class PrefUtils {
      */
     public static int getFareIndex(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getInt(PREF_FARE_KEY, 0);
+        final String key = context.getResources().getString(PREF_FARE_KEY);
+        final String defValue = context.getResources().getString(PREF_FARE_DEFAULT);
+        return Integer.parseInt(sp.getString(key, defValue));
     }
 
     /**
@@ -72,7 +77,8 @@ public class PrefUtils {
      */
     public static void setFareIndex(final Context context, final int value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putInt(PREF_FARE_KEY, value).apply();
+        sp.edit().putString(context.getResources().getString(PREF_FARE_KEY),
+                String.valueOf(value)).apply();
     }
 
     /**

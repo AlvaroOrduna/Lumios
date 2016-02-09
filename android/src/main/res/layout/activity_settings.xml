@@ -16,18 +16,18 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <string-array name="fare_entries">
-        <item>@string/pref_fare_entries_general</item>
-        <item>@string/pref_fare_entries_night</item>
-        <item>@string/pref_fare_entries_vehicles</item>
-    </string-array>
+    <include layout="@layout/include_appbar"/>
 
-    <string-array name="fare_entry_values">
-        <item>@string/pref_fare_entry_values_general</item>
-        <item>@string/pref_fare_entry_values_night</item>
-        <item>@string/pref_fare_entry_values_vehicles</item>
-    </string-array>
+    <fragment
+        android:id="@+id/fragment"
+        android:name="io.ordunaleon.lumios.ui.SettingsActivity$SettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</resources>
+</LinearLayout>

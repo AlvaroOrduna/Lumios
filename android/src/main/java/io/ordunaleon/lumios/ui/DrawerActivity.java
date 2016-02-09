@@ -17,6 +17,7 @@
 
 package io.ordunaleon.lumios.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -91,7 +92,6 @@ public class DrawerActivity extends AppCompatActivity implements
         // Find and setup the headerView text.
         mDrawerHeaderHead = (TextView) headerTitle.findViewById(R.id.drawer_header_head);
         mDrawerHeaderSubhead = (TextView) headerTitle.findViewById(R.id.drawer_header_subhead);
-        updateDrawerHeader();
 
         // First run of the app starts with the Navigation Drawer open.
         if (!PrefUtils.isWelcomeDone(this)) {
@@ -119,6 +119,11 @@ public class DrawerActivity extends AppCompatActivity implements
     public void onResume() {
         super.onResume();
         PrefUtils.registerOnSharedPreferenceChangeListener(this, this);
+
+        // As the shared preference listener is listening only when activity is running, if the user
+        // change the fare preference in Settings activity, we do not notice it so, in any case,
+        // we update the drawer header, just in case.
+        updateDrawerHeader();
     }
 
     @Override
@@ -156,33 +161,42 @@ public class DrawerActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        // Create a new fragment and specify the text inside it.
-        Fragment fragment = DummyFragment.newInstance(menuItem.getTitle());
-
-        // Insert the fragment by replacing any existing fragment.
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
-        }
-
-        // Highlight the selected item, update the title, and close the drawer.
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
         mDrawerLayout.closeDrawers();
-        return true;
+
+        switch (menuItem.getItemId()) {
+            case R.id.drawer_settings_item:
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                return false;
+            default:
+                // Create a new fragment and specify the text inside it.
+                Fragment fragment = DummyFragment.newInstance(menuItem.getTitle());
+
+                // Insert the fragment by replacing any existing fragment.
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
+
+                }
+
+                // Highlight the selected item, update the title, and close the drawer.
+                menuItem.setChecked(true);
+                setTitle(menuItem.getTitle());
+                return true;
+        }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PrefUtils.PREF_FARE_KEY)) {
+        if (key.equals(getResources().getString(R.string.pref_fare_key))) {
             updateDrawerHeader();
         }
     }
 
     private void updateDrawerHeader() {
-        int selectedFareValue = PrefUtils.getFareIndex(this);
+        int selectedFareIndex = PrefUtils.getFareIndex(this);
         String[] faresEntries = getResources().getStringArray(R.array.fare_entries);
 
-        mDrawerHeaderSubhead.setText(faresEntries[selectedFareValue]);
+        mDrawerHeaderSubhead.setText(faresEntries[selectedFareIndex]);
     }
 }

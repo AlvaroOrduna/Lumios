@@ -20,10 +20,13 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_main_item"
-            android:title="@string/drawer_item_main" />
+            android:title="@string/drawer_item_main"/>
         <item
             android:id="@+id/drawer_dummy_item"
-            android:title="@string/drawer_item_dummy" />
+            android:title="@string/drawer_item_dummy"/>
+        <item
+            android:id="@+id/drawer_settings_item"
+            android:title="@string/drawer_item_settings"/>
     </group>
 
 </menu>
