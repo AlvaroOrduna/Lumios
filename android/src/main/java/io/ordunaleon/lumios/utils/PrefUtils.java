@@ -19,6 +19,7 @@ package io.ordunaleon.lumios.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
 public class PrefUtils {
@@ -27,6 +28,11 @@ public class PrefUtils {
      * Boolean indicating whether the app has performed the (one-time) welcome flow.
      */
     public static final String PREF_WELCOME_DONE = "pref_welcome_done";
+
+    /**
+     * Integer indicating which of the three available fares is selected.
+     */
+    public static final String PREF_FARE_KEY = "pref_fare";
 
     /**
      * Return true if the first app run have already been executed.
@@ -47,5 +53,49 @@ public class PrefUtils {
     public static void setWelcomeDone(final Context context, final boolean newValue) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().putBoolean(PREF_WELCOME_DONE, newValue).apply();
+    }
+
+    /**
+     * Return the index of the selected fare.
+     *
+     * @param context Context to be used to lookup the {@link SharedPreferences}.
+     */
+    public static int getFareIndex(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt(PREF_FARE_KEY, 0);
+    }
+
+    /**
+     * Set the index of the selected fare.
+     *
+     * @param context Context to be used to lookup the {@link SharedPreferences}.
+     */
+    public static void setFareIndex(final Context context, final int value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.edit().putInt(PREF_FARE_KEY, value).apply();
+    }
+
+    /**
+     * Registers a callback to be invoked when a change happens to a preference.
+     *
+     * @param context  Context in which to register the listener.
+     * @param listener The callback that will run.
+     * @see #unregisterOnSharedPreferenceChangeListener
+     */
+    public static void registerOnSharedPreferenceChangeListener(final Context context, OnSharedPreferenceChangeListener listener) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    /**
+     * Unregisters a previous registered callback.
+     *
+     * @param context  Context in which to unregister the listener.
+     * @param listener The callback that should be unregistered.
+     * @see #registerOnSharedPreferenceChangeListener
+     */
+    public static void unregisterOnSharedPreferenceChangeListener(final Context context, OnSharedPreferenceChangeListener listener) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.unregisterOnSharedPreferenceChangeListener(listener);
     }
 }

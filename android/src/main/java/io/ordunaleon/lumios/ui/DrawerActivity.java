@@ -17,10 +17,12 @@
 
 package io.ordunaleon.lumios.ui;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -29,13 +31,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import io.ordunaleon.lumios.R;
 import io.ordunaleon.lumios.utils.PrefUtils;
 
 
 public class DrawerActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY_STATE_TITLE = "state_title";
 
@@ -45,6 +51,9 @@ public class DrawerActivity extends AppCompatActivity implements
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    private TextView mDrawerHeaderHead;
+    private TextView mDrawerHeaderSubhead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,25 @@ public class DrawerActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Find NavigationView header.
+        View headerView = navigationView.getHeaderView(0);
+
+        // Make clickable the text in the headerView.
+        LinearLayout headerTitle = (LinearLayout) headerView.findViewById(R.id.drawer_header_title);
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Todo: Allow the user to change the fare rather than display a Snackbar.
+                View view = v.getRootView().findViewById(R.id.frame_layout);
+                Snackbar.make(view, "WIP | Select your fare", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
+        // Find and setup the headerView text.
+        mDrawerHeaderHead = (TextView) headerTitle.findViewById(R.id.drawer_header_head);
+        mDrawerHeaderSubhead = (TextView) headerTitle.findViewById(R.id.drawer_header_subhead);
+        updateDrawerHeader();
+
         // First run of the app starts with the Navigation Drawer open.
         if (!PrefUtils.isWelcomeDone(this)) {
             PrefUtils.setWelcomeDone(this, true);
@@ -75,8 +103,19 @@ public class DrawerActivity extends AppCompatActivity implements
             onNavigationItemSelected(navigationView.getMenu().findItem(DEFAULT_DRAWER_ITEM_ID));
         } else {
             setTitle(savedInstanceState.getCharSequence(KEY_STATE_TITLE));
-
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        PrefUtils.registerOnSharedPreferenceChangeListener(this, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PrefUtils.unregisterOnSharedPreferenceChangeListener(this, this);
     }
 
     @Override
@@ -122,5 +161,19 @@ public class DrawerActivity extends AppCompatActivity implements
         setTitle(menuItem.getTitle());
         mDrawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PrefUtils.PREF_FARE_KEY)) {
+            updateDrawerHeader();
+        }
+    }
+
+    private void updateDrawerHeader() {
+        int selectedFareValue = PrefUtils.getFareIndex(this);
+        String[] faresEntries = getResources().getStringArray(R.array.fare_entries);
+
+        mDrawerHeaderSubhead.setText(faresEntries[selectedFareValue]);
     }
 }

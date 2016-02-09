@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2016 Álvaro Orduna León
   ~
@@ -17,17 +18,16 @@
 
 <resources>
 
-    <string name="app_name">Lumios</string>
+    <string-array name="fare_entries">
+        <item>@string/fare_entries_general</item>
+        <item>@string/fare_entries_night</item>
+        <item>@string/fare_entries_vehicles</item>
+    </string-array>
 
-    <!-- Navigation Drawer -->
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="drawer_item_main">Main</string>
-    <string name="drawer_item_dummy">Dummy</string>
-
-    <!-- Fare preference -->
-    <string name="fare_entries_general">General</string>
-    <string name="fare_entries_night">Night</string>
-    <string name="fare_entries_vehicles">Vehicles</string>
+    <integer-array name="fare_entry_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </integer-array>
 
 </resources>
