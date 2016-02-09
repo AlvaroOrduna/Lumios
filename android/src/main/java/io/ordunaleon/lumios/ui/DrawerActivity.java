@@ -107,6 +107,15 @@ public class DrawerActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         PrefUtils.registerOnSharedPreferenceChangeListener(this, this);
