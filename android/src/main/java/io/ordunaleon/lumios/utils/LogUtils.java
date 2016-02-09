@@ -48,7 +48,7 @@ public class LogUtils {
     }
 
     public static void LOGD(final String tag, String message) {
-        if (LOGGING_ENABLED){
+        if (LOGGING_ENABLED) {
             if (Log.isLoggable(tag, Log.DEBUG)) {
                 Log.d(tag, message);
             }
@@ -56,7 +56,7 @@ public class LogUtils {
     }
 
     public static void LOGD(final String tag, String message, Throwable cause) {
-        if (LOGGING_ENABLED){
+        if (LOGGING_ENABLED) {
             if (Log.isLoggable(tag, Log.DEBUG)) {
                 Log.d(tag, message, cause);
             }
@@ -104,7 +104,7 @@ public class LogUtils {
     }
 
     public static void LOGE(final String tag, String message) {
-        if (LOGGING_ENABLED){
+        if (LOGGING_ENABLED) {
             Log.e(tag, message);
         }
     }

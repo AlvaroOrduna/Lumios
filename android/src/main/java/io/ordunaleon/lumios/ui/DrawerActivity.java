@@ -48,7 +48,7 @@ public class DrawerActivity extends AppCompatActivity implements
 
     // Id of the default item in the menu of the Navigation Drawer. Used to define how we
     // started the activity.
-    private static final @IdRes int DEFAULT_DRAWER_ITEM_ID = R.id.drawer_main_item;
+    private static final @IdRes int DEFAULT_DRAWER_ITEM_ID = R.id.drawer_item_main;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -164,7 +164,7 @@ public class DrawerActivity extends AppCompatActivity implements
         mDrawerLayout.closeDrawers();
 
         switch (menuItem.getItemId()) {
-            case R.id.drawer_settings_item:
+            case R.id.drawer_item_settings:
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
                 return false;
