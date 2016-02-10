@@ -19,7 +19,6 @@ package io.ordunaleon.lumios.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -37,8 +36,6 @@ import static io.ordunaleon.lumios.utils.LogUtils.LOGI;
 public class LumiosRegistrationIntentService extends IntentService {
 
     private final String LOG_TAG = LogUtils.makeLogTag(this.getClass());
-
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
 
     public LumiosRegistrationIntentService() {
         super("LumiosRegistrationIntentService");
@@ -67,10 +64,6 @@ public class LumiosRegistrationIntentService extends IntentService {
 
             LOGD(LOG_TAG, "Failed to complete token refresh", e);
         }
-
-        // Notify UI that registration has completed.
-        Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
     /**

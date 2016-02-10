@@ -17,10 +17,7 @@
 
 package io.ordunaleon.lumios.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -29,7 +26,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -71,8 +67,6 @@ public class DrawerActivity extends AppCompatActivity implements
     private TextView mDrawerHeaderHead;
     private TextView mDrawerHeaderSubhead;
 
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,19 +104,6 @@ public class DrawerActivity extends AppCompatActivity implements
         mDrawerHeaderHead = (TextView) headerTitle.findViewById(R.id.drawer_header_head);
         mDrawerHeaderSubhead = (TextView) headerTitle.findViewById(R.id.drawer_header_subhead);
 
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                View view = findViewById(R.id.frame_layout);
-
-                if (PrefUtils.getSentToken(context)) {
-                    Snackbar.make(view, getString(R.string.gcm_send_ok), Snackbar.LENGTH_LONG).show();
-                } else {
-                    Snackbar.make(view, getString(R.string.gcm_send_error), Snackbar.LENGTH_LONG).show();
-                }
-            }
-        };
-
         // First run of the app starts with the Navigation Drawer open.
         if (!PrefUtils.isWelcomeDone(this)) {
             PrefUtils.setWelcomeDone(this, true);
@@ -141,6 +122,22 @@ public class DrawerActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, LumiosRegistrationIntentService.class);
             startService(intent);
         }
+
+        PrefUtils.registerOnSharedPreferenceChangeListener(this, this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        // Sync the DrawerToggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PrefUtils.unregisterOnSharedPreferenceChangeListener(this, this);
     }
 
     @Override
@@ -153,39 +150,9 @@ public class DrawerActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        PrefUtils.registerOnSharedPreferenceChangeListener(this, this);
-
-        // As the shared preference listener is listening only when activity is running, if the user
-        // change the fare preference in Settings activity, we do not notice it so, in any case,
-        // we update the drawer header, just in case.
-        updateDrawerHeader();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(LumiosRegistrationIntentService.REGISTRATION_COMPLETE));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        PrefUtils.unregisterOnSharedPreferenceChangeListener(this, this);
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence(KEY_STATE_TITLE, getTitle());
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Sync the DrawerToggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
     }
 
     @Override
@@ -233,6 +200,11 @@ public class DrawerActivity extends AppCompatActivity implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getResources().getString(R.string.pref_fare_key))) {
             updateDrawerHeader();
+
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+            if (fragment instanceof PriceListFragment) {
+                ((PriceListFragment) fragment).onFareChanged();
+            }
         }
     }
 
