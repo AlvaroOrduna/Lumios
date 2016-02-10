@@ -76,6 +76,20 @@ public class PrefUtils {
     }
 
     /**
+     * Return the name of the selected fare.
+     *
+     * @param context Context to be used to lookup the {@link SharedPreferences}.
+     */
+    public static String getFareName(final Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        final String key = context.getResources().getString(PREF_FARE_KEY);
+        final String defValue = context.getResources().getString(PREF_FARE_DEFAULT);
+        int fareIndex = Integer.parseInt(sp.getString(key, defValue));
+        String[] fareEntries = context.getResources().getStringArray(R.array.fare_entries);
+        return fareEntries[fareIndex];
+    }
+
+    /**
      * Set the index of the selected fare.
      *
      * @param context Context to be used to lookup the {@link SharedPreferences}.

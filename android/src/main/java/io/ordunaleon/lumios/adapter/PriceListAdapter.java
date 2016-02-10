@@ -68,23 +68,19 @@ public class PriceListAdapter extends CursorAdapter {
             LOGE(LOG_TAG, "error while getting field from ISO 8601 date in string format ", e);
         }
 
-        int fareIndex = PrefUtils.getFareIndex(context);
+        String fare = PrefUtils.getFareName(context);
         double avg = 0;
         double price = 0;
 
-        switch (fareIndex) {
-            case 0:
-                avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_GENERAL);
-                price = cursor.getDouble(PriceListFragment.COL_PRICE_GENERAL);
-                break;
-            case 1:
-                avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_NIGHT);
-                price = cursor.getDouble(PriceListFragment.COL_PRICE_NIGHT);
-                break;
-            case 2:
-                avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_VEHICLE);
-                price = cursor.getDouble(PriceListFragment.COL_PRICE_VEHICLE);
-                break;
+        if (fare.equals(context.getString(R.string.pref_fare_entries_general))) {
+            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_GENERAL);
+            price = cursor.getDouble(PriceListFragment.COL_PRICE_GENERAL);
+        } else if (fare.equals(context.getString(R.string.pref_fare_entries_night))) {
+            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_NIGHT);
+            price = cursor.getDouble(PriceListFragment.COL_PRICE_NIGHT);
+        } else if (fare.equals(context.getString(R.string.pref_fare_entries_vehicles))) {
+            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_VEHICLE);
+            price = cursor.getDouble(PriceListFragment.COL_PRICE_VEHICLE);
         }
 
         viewHolder.hourView.setText(hour);

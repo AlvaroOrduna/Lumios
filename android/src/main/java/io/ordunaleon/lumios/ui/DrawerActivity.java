@@ -210,10 +210,7 @@ public class DrawerActivity extends AppCompatActivity implements
     }
 
     private void updateDrawerHeader() {
-        int selectedFareIndex = PrefUtils.getFareIndex(this);
-        String[] faresEntries = getResources().getStringArray(R.array.fare_entries);
-
-        mDrawerHeaderSubhead.setText(faresEntries[selectedFareIndex]);
+        mDrawerHeaderSubhead.setText(PrefUtils.getFareName(this));
     }
 
     /**
