@@ -92,6 +92,11 @@
             android:name=".service.LumiosDownloadService"
             android:exported="false"/>
 
+        <provider
+            android:name=".data.LumiosProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false" />
+
     </application>
 
 </manifest>

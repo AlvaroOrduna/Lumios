@@ -46,4 +46,7 @@
     <string name="gcm_send_ok">Your device has been registered by the server to provide you the latest news in real time.</string>
     <string name="gcm_send_error">An error occurred when registering your device to the server.</string>
 
+    <!-- Content Provider -->
+    <string name="content_authority" translatable="false">io.ordunaleon.lumios</string>
+
 </resources>

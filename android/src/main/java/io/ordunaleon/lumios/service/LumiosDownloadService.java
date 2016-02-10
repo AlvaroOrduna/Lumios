@@ -18,6 +18,7 @@
 package io.ordunaleon.lumios.service;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 
 import com.google.gson.Gson;
@@ -38,9 +39,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.Vector;
 
 import io.ordunaleon.lumios.utils.LogUtils;
 
+import static io.ordunaleon.lumios.data.LumiosContract.PriceEntry;
 import static io.ordunaleon.lumios.utils.LogUtils.LOGE;
 import static io.ordunaleon.lumios.utils.LogUtils.LOGI;
 
@@ -154,6 +157,8 @@ public class LumiosDownloadService extends IntentService {
         // Deserialize JSONArray into priceArray.
         Price[] priceArray = gson.fromJson(pricesJsonArray.toString(), Price[].class);
 
+        Vector<ContentValues> cVVector = new Vector<>(priceArray.length);
+
         // Normalize data and calculate the average of these. Every time we do this is with
         // information of one day, so the average corresponds to the period of a day.
         double sumGeneral = 0;
@@ -166,6 +171,7 @@ public class LumiosDownloadService extends IntentService {
             sumNight += price.getPriceNight();
             sumVehicle += price.getPriceVehicle();
         }
+
         double avgGeneral = sumGeneral / priceArray.length;
         double avgNight = sumNight / priceArray.length;
         double avgVehicle = sumVehicle / priceArray.length;
@@ -173,11 +179,20 @@ public class LumiosDownloadService extends IntentService {
             price.setAvgGeneral(avgGeneral);
             price.setAvgNight(avgNight);
             price.setAvgVehicle(avgVehicle);
+
+            cVVector.add(price.toContentValues());
         }
 
         LOGI(LOG_TAG, "Sync complete: " + priceArray.length + " new prices have been downloaded.");
 
-        // TODO: store data in database.
+        // Store values in database
+        if (cVVector.size() > 0) {
+            ContentValues[] cvArray = new ContentValues[cVVector.size()];
+            cVVector.toArray(cvArray);
+
+            int result = getContentResolver().bulkInsert(PriceEntry.CONTENT_URI, cvArray);
+            LOGI(LOG_TAG, "Store complete: " + result + " new prices have been stored in db.");
+        }
     }
 
     public static class Price {
@@ -222,6 +237,20 @@ public class LumiosDownloadService extends IntentService {
                     ", priceVehicle=" + priceVehicle +
                     ", avgVehicle=" + avgVehicle +
                     '}';
+        }
+
+        public ContentValues toContentValues() {
+            ContentValues cv = new ContentValues();
+
+            cv.put(PriceEntry.COLUMN_DATE, isoDateUTC);
+            cv.put(PriceEntry.COLUMN_PRICE_GENERAL, priceGeneral);
+            cv.put(PriceEntry.COLUMN_AVG_GENERAL, avgGeneral);
+            cv.put(PriceEntry.COLUMN_PRICE_NIGHT, priceNight);
+            cv.put(PriceEntry.COLUMN_AVG_NIGHT, avgNight);
+            cv.put(PriceEntry.COLUMN_PRICE_VEHICLE, priceVehicle);
+            cv.put(PriceEntry.COLUMN_AVG_VEHICLE, avgVehicle);
+
+            return cv;
         }
 
         public void normalize() throws ParseException {
