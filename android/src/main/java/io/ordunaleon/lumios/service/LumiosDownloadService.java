@@ -35,7 +35,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.Locale;
 import java.util.Vector;
 
 import io.ordunaleon.lumios.utils.DateUtils;
@@ -51,15 +50,6 @@ public class LumiosDownloadService extends IntentService {
 
     protected final static String EXTRA_URL_KEY = "url";
     protected final static String EXTRA_URL_ARRAY_KEY = "url_array";
-
-    // We use the Locale Spain because the server and data are related to Spain.
-    private static final Locale LOCALE_SPAIN = new Locale("es", "ES");
-
-    // Date format used in the ESIOS API.
-    private static final String DATE_FORMAT_ESIOS = "dd/MM/yyyy";
-
-    // ISO 8601 date format.
-    private static final String DATE_FORMAT_ISO = "yyyy-MM-dd'T'HH:mmZ";
 
     /**
      * Creates a LumiosDownloadService. Invoked by your subclass's constructor.

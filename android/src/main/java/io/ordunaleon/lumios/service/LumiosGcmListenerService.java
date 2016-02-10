@@ -22,13 +22,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import io.ordunaleon.lumios.utils.LogUtils;
-
-import static io.ordunaleon.lumios.utils.LogUtils.LOGD;
-
 public class LumiosGcmListenerService extends GcmListenerService {
-
-    private final String LOG_TAG = LogUtils.makeLogTag(this.getClass());
 
     /**
      * Called when message is received.
@@ -39,8 +33,6 @@ public class LumiosGcmListenerService extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        LOGD(LOG_TAG, "onMessageReceived from: " + from);
-
         if (from.equals("/topics/pvpc")) {
             Intent intent = new Intent(this, LumiosDownloadService.class);
             intent.putExtras(data);
