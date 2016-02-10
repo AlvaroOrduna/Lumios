@@ -103,6 +103,7 @@ public class DrawerActivity extends AppCompatActivity implements
         // Find and setup the headerView text.
         mDrawerHeaderHead = (TextView) headerTitle.findViewById(R.id.drawer_header_head);
         mDrawerHeaderSubhead = (TextView) headerTitle.findViewById(R.id.drawer_header_subhead);
+        updateDrawerHeader();
 
         // First run of the app starts with the Navigation Drawer open.
         if (!PrefUtils.isWelcomeDone(this)) {
