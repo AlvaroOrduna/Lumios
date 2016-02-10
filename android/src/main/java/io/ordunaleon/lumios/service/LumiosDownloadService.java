@@ -35,12 +35,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.Vector;
 
+import io.ordunaleon.lumios.utils.DateUtils;
 import io.ordunaleon.lumios.utils.LogUtils;
 
 import static io.ordunaleon.lumios.data.LumiosContract.PriceEntry;
@@ -254,18 +252,8 @@ public class LumiosDownloadService extends IntentService {
         }
 
         public void normalize() throws ParseException {
-            // Get calendar with corresponding day and hour.
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_ESIOS, LOCALE_SPAIN);
-            cal.setTime(sdf.parse(day));
-            cal.add(Calendar.HOUR_OF_DAY, Integer.parseInt(hour.substring(0, 2)));
-
-            // Convert the date obtained in ISO date.
-            sdf = new SimpleDateFormat(DATE_FORMAT_ISO);
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-
             // Store ISO date as new attribute.
-            isoDateUTC = sdf.format(cal.getTime());
+            isoDateUTC = DateUtils.getUtcIsoFromEsiosDate(day, hour);
 
             // Normalize prices.
             priceGeneral = Double.parseDouble(general.replace(",", "."));
