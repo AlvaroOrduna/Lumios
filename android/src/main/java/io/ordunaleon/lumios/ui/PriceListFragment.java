@@ -31,6 +31,7 @@ import android.widget.ListView;
 
 import io.ordunaleon.lumios.R;
 import io.ordunaleon.lumios.adapter.PriceListAdapter;
+import io.ordunaleon.lumios.utils.DateUtils;
 
 import static io.ordunaleon.lumios.data.LumiosContract.PriceEntry;
 
@@ -120,18 +121,18 @@ public class PriceListFragment extends Fragment implements LoaderManager.LoaderC
         // This is called when a new Loader needs to be created.  This
         // fragment only uses one loader, so we don't care about checking the id.
 
-        // TODO: set these params
-        Uri uri = PriceEntry.CONTENT_URI;
-        String[] projection = FORECAST_COLUMNS;
-        String selection = null;
-        String[] selectionArgs = null;
+        // Only show data for the current and subsequent time.
+        String startDate = DateUtils.getNowIso(DateUtils.TRUNCATE_UNIT_HOUR);
+        Uri uri = PriceEntry.buildUriWithStartDate(startDate);
+
+        // Sort by date ascending.
         String sortOrder = PriceEntry.COLUMN_DATE + " ASC";
 
         return new CursorLoader(getActivity(),
                 uri,
-                projection,
-                selection,
-                selectionArgs,
+                FORECAST_COLUMNS,
+                null,
+                null,
                 sortOrder);
     }
 
