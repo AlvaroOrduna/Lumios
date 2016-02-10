@@ -118,8 +118,8 @@ public class DrawerActivity extends AppCompatActivity implements
         }
 
         // Check for Google Play Services and start LumiosRegistrationIntentService to register this
-        // application with GCM.
-        if (checkPlayServices()) {
+        // application with GCM if needed.
+        if (checkPlayServices() && !PrefUtils.isAppRegistered(this)) {
             Intent intent = new Intent(this, LumiosRegistrationIntentService.class);
             startService(intent);
         }

@@ -21,6 +21,8 @@ import android.content.Intent;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
 
+import io.ordunaleon.lumios.utils.PrefUtils;
+
 public class LumiosInstanceIDListenerService extends InstanceIDListenerService {
 
     /**
@@ -30,7 +32,10 @@ public class LumiosInstanceIDListenerService extends InstanceIDListenerService {
      */
     @Override
     public void onTokenRefresh() {
-        // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
+        // Set preference as false.
+        PrefUtils.setAppRegistration(this, false);
+
+        // Start registration service to get the new token.
         Intent intent = new Intent(this, LumiosRegistrationIntentService.class);
         startService(intent);
     }

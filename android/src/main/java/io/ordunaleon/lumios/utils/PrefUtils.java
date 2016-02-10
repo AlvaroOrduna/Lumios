@@ -106,7 +106,7 @@ public class PrefUtils {
      * @param context The context of the preferences where values are stored.
      * @param value   The value to store.
      */
-    public static void setSentToken(Context context, boolean value) {
+    public static void setAppRegistration(Context context, boolean value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         sp.edit().putBoolean(context.getResources().getString(PREF_SENT_TOKEN_KEY), value).apply();
     }
@@ -117,7 +117,7 @@ public class PrefUtils {
      * @param context The context of the preferences where values are stored.
      * @return Boolean The value stored.
      */
-    public static boolean getSentToken(Context context) {
+    public static boolean isAppRegistered(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getResources().getString(PREF_SENT_TOKEN_KEY), false);
     }

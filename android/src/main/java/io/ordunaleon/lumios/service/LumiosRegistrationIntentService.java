@@ -58,9 +58,9 @@ public class LumiosRegistrationIntentService extends IntentService {
             subscribeTopics(token);
 
             // Store a boolean indicating whether the app has been registered with GCM.
-            PrefUtils.setSentToken(this, true);
+            PrefUtils.setAppRegistration(this, true);
         } catch (Exception e) {
-            PrefUtils.setSentToken(this, false);
+            PrefUtils.setAppRegistration(this, false);
 
             LOGD(LOG_TAG, "Failed to complete token refresh", e);
         }
