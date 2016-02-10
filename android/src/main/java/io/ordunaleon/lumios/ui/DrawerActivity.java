@@ -205,27 +205,28 @@ public class DrawerActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         mDrawerLayout.closeDrawers();
 
+        Fragment fragment;
         switch (menuItem.getItemId()) {
+            case R.id.drawer_item_main:
+                fragment = PriceListFragment.newInstance();
+                break;
             case R.id.drawer_item_settings:
                 Intent i = new Intent(this, SettingsActivity.class);
                 startActivity(i);
                 return false;
             default:
-                // Create a new fragment and specify the text inside it.
-                Fragment fragment = DummyFragment.newInstance(menuItem.getTitle());
-
-                // Insert the fragment by replacing any existing fragment.
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
-
-                }
-
-                // Highlight the selected item, update the title, and close the drawer.
-                menuItem.setChecked(true);
-                setTitle(menuItem.getTitle());
-                return true;
+                fragment = DummyFragment.newInstance(menuItem.getTitle());
+                break;
         }
+
+        // Insert the fragment by replacing any existing fragment.
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
+
+        // Highlight the selected item, update the title, and close the drawer.
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        return true;
     }
 
     @Override
