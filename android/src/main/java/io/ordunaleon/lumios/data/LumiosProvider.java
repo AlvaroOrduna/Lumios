@@ -134,7 +134,7 @@ public class LumiosProvider extends ContentProvider {
 
         switch (match) {
             case PRICE:
-                retCursor = getPrice(uri, selectionArgs, sortOrder);
+                retCursor = getPrice(uri, projection, sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown query uri: " + uri);
