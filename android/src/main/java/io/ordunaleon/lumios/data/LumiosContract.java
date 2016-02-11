@@ -19,8 +19,14 @@ package io.ordunaleon.lumios.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.ordunaleon.lumios.R;
 
 public class LumiosContract {
 
@@ -95,6 +101,27 @@ public class LumiosContract {
 
         public static String getEndDateFromUri(Uri uri) {
             return uri.getQueryParameter(URI_QUERY_PARAM_END_DATE);
+        }
+
+        public static String[] getColumns(Context context, String fareName) {
+            List<String> columnsList = new ArrayList<>();
+
+            columnsList.add(_ID);
+            columnsList.add(COLUMN_DATE);
+            if (fareName.equals(context.getString(R.string.pref_fare_entries_general))) {
+                columnsList.add(COLUMN_PRICE_GENERAL);
+                columnsList.add(COLUMN_AVG_GENERAL);
+            } else if (fareName.equals(context.getString(R.string.pref_fare_entries_night))) {
+                columnsList.add(COLUMN_PRICE_NIGHT);
+                columnsList.add(COLUMN_AVG_NIGHT);
+            } else if (fareName.equals(context.getString(R.string.pref_fare_entries_vehicles))) {
+                columnsList.add(COLUMN_PRICE_VEHICLE);
+                columnsList.add(COLUMN_AVG_VEHICLE);
+            }
+
+            String[] columnsArray = new String[columnsList.size()];
+            columnsList.toArray(columnsArray);
+            return columnsArray;
         }
     }
 }

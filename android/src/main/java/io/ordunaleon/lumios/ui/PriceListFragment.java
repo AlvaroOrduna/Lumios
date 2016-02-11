@@ -32,6 +32,7 @@ import android.widget.ListView;
 import io.ordunaleon.lumios.R;
 import io.ordunaleon.lumios.adapter.PriceListAdapter;
 import io.ordunaleon.lumios.utils.DateUtils;
+import io.ordunaleon.lumios.utils.PrefUtils;
 
 import static io.ordunaleon.lumios.data.LumiosContract.PriceEntry;
 
@@ -39,25 +40,10 @@ public class PriceListFragment extends Fragment implements LoaderManager.LoaderC
 
     private static final int PRICE_LIST_LOADER = 0;
 
-    private static final String[] FORECAST_COLUMNS = {
-            PriceEntry.TABLE_NAME + "." + PriceEntry._ID,
-            PriceEntry.COLUMN_DATE,
-            PriceEntry.COLUMN_PRICE_GENERAL,
-            PriceEntry.COLUMN_PRICE_NIGHT,
-            PriceEntry.COLUMN_PRICE_VEHICLE,
-            PriceEntry.COLUMN_AVG_GENERAL,
-            PriceEntry.COLUMN_AVG_NIGHT,
-            PriceEntry.COLUMN_AVG_VEHICLE
-    };
-
-    public static final int COL_PRICE_ID = 0;
-    public static final int COL_PRICE_DATE = 1;
-    public static final int COL_PRICE_GENERAL = 2;
-    public static final int COL_PRICE_AVG_GENERAL = 3;
-    public static final int COL_PRICE_NIGHT = 4;
-    public static final int COL_PRICE_AVG_NIGHT = 5;
-    public static final int COL_PRICE_VEHICLE = 6;
-    public static final int COL_PRICE_AVG_VEHICLE = 7;
+    public static final int COL_ID = 0;
+    public static final int COL_DATE = 1;
+    public static final int COL_PRICE = 2;
+    public static final int COL_AVG = 3;
 
     private static final String SELECTED_KEY = "selected_position";
 
@@ -125,12 +111,16 @@ public class PriceListFragment extends Fragment implements LoaderManager.LoaderC
         String startDate = DateUtils.getNowIso(DateUtils.TRUNCATE_UNIT_HOUR);
         Uri uri = PriceEntry.buildUriWithStartDate(startDate);
 
+        // Get the columns based on the selected fare.
+        String[] projection = PriceEntry
+                .getColumns(getActivity(), PrefUtils.getFareName(getActivity()));
+
         // Sort by date ascending.
         String sortOrder = PriceEntry.COLUMN_DATE + " ASC";
 
         return new CursorLoader(getActivity(),
                 uri,
-                FORECAST_COLUMNS,
+                projection,
                 null,
                 null,
                 sortOrder);

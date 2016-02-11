@@ -32,7 +32,6 @@ import io.ordunaleon.lumios.R;
 import io.ordunaleon.lumios.ui.PriceListFragment;
 import io.ordunaleon.lumios.utils.DateUtils;
 import io.ordunaleon.lumios.utils.LogUtils;
-import io.ordunaleon.lumios.utils.PrefUtils;
 
 import static io.ordunaleon.lumios.utils.LogUtils.LOGE;
 
@@ -59,8 +58,7 @@ public class PriceListAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        String dateStr = cursor.getString(PriceListFragment.COL_PRICE_DATE);
-
+        String dateStr = cursor.getString(PriceListFragment.COL_DATE);
         String hour = null;
         try {
             hour = DateUtils.getFieldFromIsoDate(dateStr, Calendar.HOUR_OF_DAY);
@@ -68,20 +66,8 @@ public class PriceListAdapter extends CursorAdapter {
             LOGE(LOG_TAG, "error while getting field from ISO 8601 date in string format ", e);
         }
 
-        String fare = PrefUtils.getFareName(context);
-        double avg = 0;
-        double price = 0;
-
-        if (fare.equals(context.getString(R.string.pref_fare_entries_general))) {
-            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_GENERAL);
-            price = cursor.getDouble(PriceListFragment.COL_PRICE_GENERAL);
-        } else if (fare.equals(context.getString(R.string.pref_fare_entries_night))) {
-            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_NIGHT);
-            price = cursor.getDouble(PriceListFragment.COL_PRICE_NIGHT);
-        } else if (fare.equals(context.getString(R.string.pref_fare_entries_vehicles))) {
-            avg = cursor.getDouble(PriceListFragment.COL_PRICE_AVG_VEHICLE);
-            price = cursor.getDouble(PriceListFragment.COL_PRICE_VEHICLE);
-        }
+        double price = cursor.getDouble(PriceListFragment.COL_PRICE);
+        double avg = cursor.getDouble(PriceListFragment.COL_AVG);
 
         viewHolder.hourView.setText(hour);
         viewHolder.avgView.setText(String.valueOf(avg));
