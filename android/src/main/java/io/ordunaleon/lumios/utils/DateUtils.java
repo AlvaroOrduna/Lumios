@@ -56,8 +56,7 @@ public class DateUtils {
     private static final String DF_ISO8601 = "yyyy-MM-dd'T'HH:mmZ";
 
     private static final TimeZone TZ_UTC = TimeZone.getTimeZone("UTC");
-
-    private static final Locale LOCALE_SPAIN = new Locale("es", "ES");
+    private static final TimeZone TZ_SPAIN = TimeZone.getTimeZone("Europe/Madrid");
 
     /**
      * Set to zero each field given by fields array in th given calendar
@@ -152,7 +151,8 @@ public class DateUtils {
      */
     public static String getUtcIsoFromEsiosDate(String day, String hour) throws ParseException {
         GregorianCalendar gc = (GregorianCalendar) GregorianCalendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(DF_ESIOS, LOCALE_SPAIN);
+        SimpleDateFormat sdf = new SimpleDateFormat(DF_ESIOS);
+        sdf.setTimeZone(TZ_SPAIN);
 
         // Set day of the calendar.
         gc.setTime(sdf.parse(day));
