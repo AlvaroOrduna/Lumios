@@ -165,8 +165,13 @@ public class LumiosDownloadService extends IntentService {
         double avgVehicle = sumVehicle / priceArray.length;
         for (Price price : priceArray) {
             price.setAvgGeneral(avgGeneral);
+            price.setIncreaseGeneral((price.getPriceGeneral() / avgGeneral - 1) * 100);
+
             price.setAvgNight(avgNight);
+            price.setIncreaseNight((price.getPriceNight() / avgNight - 1) * 100);
+
             price.setAvgVehicle(avgVehicle);
+            price.setIncreaseVehicle((price.getPriceVehicle() / avgVehicle - 1) * 100);
 
             cVVector.add(price.toContentValues());
         }
@@ -201,10 +206,13 @@ public class LumiosDownloadService extends IntentService {
         private String isoDateUTC;
         private double priceGeneral;
         private double avgGeneral;
+        private double increaseGeneral;
         private double priceNight;
         private double avgNight;
+        private double increaseNight;
         private double priceVehicle;
         private double avgVehicle;
+        private double increaseVehicle;
 
         public Price(String day, String hour, String general, String night, String vehicle) {
             this.day = day;
@@ -233,10 +241,13 @@ public class LumiosDownloadService extends IntentService {
             cv.put(PriceEntry.COLUMN_DATE, isoDateUTC);
             cv.put(PriceEntry.COLUMN_PRICE_GENERAL, priceGeneral);
             cv.put(PriceEntry.COLUMN_AVG_GENERAL, avgGeneral);
+            cv.put(PriceEntry.COLUMN_INCREASE_GENERAL, increaseGeneral);
             cv.put(PriceEntry.COLUMN_PRICE_NIGHT, priceNight);
             cv.put(PriceEntry.COLUMN_AVG_NIGHT, avgNight);
+            cv.put(PriceEntry.COLUMN_INCREASE_NIGHT, increaseNight);
             cv.put(PriceEntry.COLUMN_PRICE_VEHICLE, priceVehicle);
             cv.put(PriceEntry.COLUMN_AVG_VEHICLE, avgVehicle);
+            cv.put(PriceEntry.COLUMN_INCREASE_VEHICLE, increaseVehicle);
 
             return cv;
         }
@@ -289,6 +300,30 @@ public class LumiosDownloadService extends IntentService {
 
         public void setAvgVehicle(double avgVehicle) {
             this.avgVehicle = avgVehicle;
+        }
+
+        public double getIncreaseGeneral() {
+            return increaseGeneral;
+        }
+
+        public void setIncreaseGeneral(double increaseGeneral) {
+            this.increaseGeneral = increaseGeneral;
+        }
+
+        public double getIncreaseNight() {
+            return increaseNight;
+        }
+
+        public void setIncreaseNight(double increaseNight) {
+            this.increaseNight = increaseNight;
+        }
+
+        public double getIncreaseVehicle() {
+            return increaseVehicle;
+        }
+
+        public void setIncreaseVehicle(double increaseVehicle) {
+            this.increaseVehicle = increaseVehicle;
         }
     }
 }

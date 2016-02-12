@@ -68,10 +68,12 @@ public class PriceListAdapter extends CursorAdapter {
 
         double price = cursor.getDouble(PriceListFragment.COL_PRICE);
         double avg = cursor.getDouble(PriceListFragment.COL_AVG);
+        double increase = cursor.getDouble(PriceListFragment.COL_INCREASE);
 
         viewHolder.hourView.setText(hour);
         viewHolder.avgView.setText(String.valueOf(avg));
         viewHolder.priceView.setText(String.valueOf(price));
+        viewHolder.increaseView.setText(String.valueOf(increase));
     }
 
     /**
@@ -81,11 +83,13 @@ public class PriceListAdapter extends CursorAdapter {
         public final TextView hourView;
         public final TextView avgView;
         public final TextView priceView;
+        public final TextView increaseView;
 
         public ViewHolder(View view) {
             hourView = (TextView) view.findViewById(R.id.item_price_list_hour);
             avgView = (TextView) view.findViewById(R.id.item_price_list_avg);
             priceView = (TextView) view.findViewById(R.id.item_price_list_price);
+            increaseView = (TextView) view.findViewById(R.id.item_price_list_increase);
         }
     }
 }

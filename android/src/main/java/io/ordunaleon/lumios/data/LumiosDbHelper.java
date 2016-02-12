@@ -27,7 +27,7 @@ public class LumiosDbHelper extends SQLiteOpenHelper {
 
     static final String DATABASE_NAME = "lumios.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String SQL_CREATE_PRICE_TABLE =
             "CREATE TABLE " + PriceEntry.TABLE_NAME + " (" +
@@ -35,10 +35,13 @@ public class LumiosDbHelper extends SQLiteOpenHelper {
                     PriceEntry.COLUMN_DATE + " TEXT NOT NULL," +
                     PriceEntry.COLUMN_PRICE_GENERAL + " DOUBLE NOT NULL," +
                     PriceEntry.COLUMN_AVG_GENERAL + " DOUBLE NOT NULL," +
+                    PriceEntry.COLUMN_INCREASE_GENERAL + " DOUBLE NOT NULL," +
                     PriceEntry.COLUMN_PRICE_NIGHT + " DOUBLE NOT NULL," +
                     PriceEntry.COLUMN_AVG_NIGHT + " DOUBLE NOT NULL," +
+                    PriceEntry.COLUMN_INCREASE_NIGHT + " DOUBLE NOT NULL," +
                     PriceEntry.COLUMN_PRICE_VEHICLE + " DOUBLE NOT NULL," +
                     PriceEntry.COLUMN_AVG_VEHICLE + " DOUBLE NOT NULL," +
+                    PriceEntry.COLUMN_INCREASE_VEHICLE + " DOUBLE NOT NULL," +
 
                     // To assure the application have just one price entry per date,
                     // we create a UNIQUE constraint with REPLACE strategy.

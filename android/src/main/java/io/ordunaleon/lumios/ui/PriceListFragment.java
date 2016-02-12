@@ -44,6 +44,7 @@ public class PriceListFragment extends Fragment implements LoaderManager.LoaderC
     public static final int COL_DATE = 1;
     public static final int COL_PRICE = 2;
     public static final int COL_AVG = 3;
+    public static final int COL_INCREASE = 4;
 
     private static final String SELECTED_KEY = "selected_position";
 

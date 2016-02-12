@@ -38,10 +38,13 @@ public class LumiosContract {
         String COLUMN_DATE = "date";
         String COLUMN_PRICE_GENERAL = "price_general";
         String COLUMN_AVG_GENERAL = "avg_general";
+        String COLUMN_INCREASE_GENERAL = "increase_general";
         String COLUMN_PRICE_NIGHT = "price_night";
         String COLUMN_AVG_NIGHT = "avg_night";
+        String COLUMN_INCREASE_NIGHT = "increase_night";
         String COLUMN_PRICE_VEHICLE = "price_vehicle";
         String COLUMN_AVG_VEHICLE = "avg_vehicle";
+        String COLUMN_INCREASE_VEHICLE = "increase_vehicle";
     }
 
     public static final String CONTENT_AUTHORITY = "io.ordunaleon.lumios";
@@ -111,12 +114,15 @@ public class LumiosContract {
             if (fareName.equals(context.getString(R.string.pref_fare_entries_general))) {
                 columnsList.add(COLUMN_PRICE_GENERAL);
                 columnsList.add(COLUMN_AVG_GENERAL);
+                columnsList.add(COLUMN_INCREASE_GENERAL);
             } else if (fareName.equals(context.getString(R.string.pref_fare_entries_night))) {
                 columnsList.add(COLUMN_PRICE_NIGHT);
                 columnsList.add(COLUMN_AVG_NIGHT);
+                columnsList.add(COLUMN_INCREASE_NIGHT);
             } else if (fareName.equals(context.getString(R.string.pref_fare_entries_vehicles))) {
                 columnsList.add(COLUMN_PRICE_VEHICLE);
                 columnsList.add(COLUMN_AVG_VEHICLE);
+                columnsList.add(COLUMN_INCREASE_VEHICLE);
             }
 
             String[] columnsArray = new String[columnsList.size()];
