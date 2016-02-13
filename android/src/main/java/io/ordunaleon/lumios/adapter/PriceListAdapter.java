@@ -26,13 +26,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.ParseException;
-import java.util.Calendar;
 
 import io.ordunaleon.lumios.R;
 import io.ordunaleon.lumios.ui.PriceListFragment;
 import io.ordunaleon.lumios.utils.DateUtils;
 import io.ordunaleon.lumios.utils.LogUtils;
 
+import static android.text.format.DateUtils.FORMAT_SHOW_TIME;
 import static io.ordunaleon.lumios.utils.LogUtils.LOGE;
 
 public class PriceListAdapter extends CursorAdapter {
@@ -59,9 +59,9 @@ public class PriceListAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         String dateStr = cursor.getString(PriceListFragment.COL_DATE);
-        String hour = null;
+        String date = null;
         try {
-            hour = DateUtils.getFieldFromIsoDate(dateStr, Calendar.HOUR_OF_DAY);
+            date = DateUtils.formatDateFromUtcIso(context, dateStr, FORMAT_SHOW_TIME);
         } catch (ParseException e) {
             LOGE(LOG_TAG, "error while getting field from ISO 8601 date in string format ", e);
         }
@@ -70,10 +70,10 @@ public class PriceListAdapter extends CursorAdapter {
         double avg = cursor.getDouble(PriceListFragment.COL_AVG);
         double increase = cursor.getDouble(PriceListFragment.COL_INCREASE);
 
-        viewHolder.hourView.setText(hour);
-        viewHolder.avgView.setText(String.valueOf(avg));
-        viewHolder.priceView.setText(String.valueOf(price));
-        viewHolder.increaseView.setText(String.valueOf(increase));
+        viewHolder.hourView.setText(date);
+        viewHolder.avgView.setText(context.getString(R.string.item_price_list_avg, avg));
+        viewHolder.priceView.setText(context.getString(R.string.item_price_list_price, price));
+        viewHolder.increaseView.setText(context.getString(R.string.item_price_list_increase, increase));
     }
 
     /**

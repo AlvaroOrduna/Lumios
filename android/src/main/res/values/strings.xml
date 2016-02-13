@@ -15,7 +15,7 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
     <string name="app_name">Lumios</string>
 
@@ -28,6 +28,11 @@
     <string name="drawer_item_main">Main</string>
     <string name="drawer_item_dummy">Dummy</string>
     <string name="drawer_item_settings">@string/title_activity_settings</string>
+
+    <!-- Price list -->
+    <string name="item_price_list_avg"><xliff:g id="avg">%1$.4f</xliff:g> €</string>
+    <string name="item_price_list_price"><xliff:g id="price">%1$.4f</xliff:g> €</string>
+    <string name="item_price_list_increase"><xliff:g id="increase">%1$.2f</xliff:g> %%</string>
 
     <!-- Fare preference -->
     <string name="pref_fare_key">pref_fare_key</string>

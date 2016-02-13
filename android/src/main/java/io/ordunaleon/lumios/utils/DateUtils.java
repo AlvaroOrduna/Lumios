@@ -17,6 +17,8 @@
 
 package io.ordunaleon.lumios.utils;
 
+import android.content.Context;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,6 +26,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static android.text.format.DateUtils.formatDateTime;
 
 public class DateUtils {
 
@@ -122,6 +126,27 @@ public class DateUtils {
         gc = (GregorianCalendar) truncate(gc, truncateUnit);
 
         return sdf.format(gc.getTime());
+    }
+
+    /**
+     * Given a date as a string in UTC ISO 8061 format, return a local date in the given format.
+     *
+     * @param context The context of the preferences where values are stored.
+     * @param date    Date as a string in ISO 8061 format.
+     * @param flags   A bit mask of formatting options. {@link android.text.format.DateUtils}
+     * @return String containing the local date.
+     * @throws ParseException when the given string is not in the correct form.
+     */
+    public static String formatDateFromUtcIso(Context context, String date, int flags)
+            throws ParseException {
+        GregorianCalendar gc = (GregorianCalendar) GregorianCalendar.getInstance();
+
+        SimpleDateFormat sdf = new SimpleDateFormat(DF_ISO8601);
+        sdf.setTimeZone(TZ_UTC);
+
+        gc.setTime(sdf.parse(date));
+
+        return formatDateTime(context, gc.getTimeInMillis(), flags);
     }
 
     /**
