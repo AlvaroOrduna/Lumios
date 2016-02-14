@@ -42,7 +42,7 @@ import io.ordunaleon.lumios.utils.LogUtils;
 
 import static io.ordunaleon.lumios.data.LumiosContract.PriceEntry;
 import static io.ordunaleon.lumios.utils.LogUtils.LOGE;
-import static io.ordunaleon.lumios.utils.LogUtils.LOGI;
+import static io.ordunaleon.lumios.utils.LogUtils.LOGV;
 
 public class LumiosDownloadService extends IntentService {
 
@@ -165,18 +165,18 @@ public class LumiosDownloadService extends IntentService {
         double avgVehicle = sumVehicle / priceArray.length;
         for (Price price : priceArray) {
             price.setAvgGeneral(avgGeneral);
-            price.setIncreaseGeneral((price.getPriceGeneral() / avgGeneral - 1) * 100);
+            price.setIncreaseGeneral((price.getPriceGeneral() / avgGeneral) * 100);
 
             price.setAvgNight(avgNight);
-            price.setIncreaseNight((price.getPriceNight() / avgNight - 1) * 100);
+            price.setIncreaseNight((price.getPriceNight() / avgNight) * 100);
 
             price.setAvgVehicle(avgVehicle);
-            price.setIncreaseVehicle((price.getPriceVehicle() / avgVehicle - 1) * 100);
+            price.setIncreaseVehicle((price.getPriceVehicle() / avgVehicle) * 100);
 
             cVVector.add(price.toContentValues());
         }
 
-        LOGI(LOG_TAG, "Sync complete: " + priceArray.length + " new prices have been downloaded.");
+        LOGV(LOG_TAG, "Sync complete: " + priceArray.length + " new prices have been downloaded.");
 
         // Store values in database
         if (cVVector.size() > 0) {
@@ -184,7 +184,7 @@ public class LumiosDownloadService extends IntentService {
             cVVector.toArray(cvArray);
 
             int result = getContentResolver().bulkInsert(PriceEntry.CONTENT_URI, cvArray);
-            LOGI(LOG_TAG, "Store complete: " + result + " new prices have been stored in db.");
+            LOGV(LOG_TAG, "Store complete: " + result + " new prices have been stored in db.");
         }
     }
 
