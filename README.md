@@ -1,4 +1,4 @@
-# Lumios
+# DISCONTINUED | Lumios
 
 Android app to see what's new in the [Spanish electricity price system](http://www.esios.ree.es/pvpc)
 
